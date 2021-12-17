@@ -107,6 +107,8 @@ fi
 setup_lua_env_cmd=$($PREFIX/bin/luarocks path)
 eval "$setup_lua_env_cmd"
 
+apt-get install luarocks -y
+
 luarocks list
 $PREFIX/bin/luarocks list
 
