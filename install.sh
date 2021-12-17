@@ -9,7 +9,7 @@ if [[ "$THIS_DIR" == *" "* ]]; then
 Please try a different path, one without any spaces."
     exit 1
 fi
-PREFIX=${PREFIX:-"${THIS_DIR}/install"}
+PREFIX=${PREFIX:-"/usr/local"}
 TORCH_LUA_VERSION=${TORCH_LUA_VERSION:-"LUAJIT21"} # by default install LUAJIT21
 
 while getopts 'bsh' x; do
@@ -73,6 +73,7 @@ tar -zxf lua-5.3.5.tar.gz
 cd lua-5.3.5
 make linux test
 make install
+cd ..
 
 echo "Installing Luarocks"
 wget https://luarocks.org/releases/luarocks-3.8.0.tar.gz --no-check-certificate
@@ -81,6 +82,7 @@ cd luarocks-3.8.0
 ./configure --with-lua-include=/usr/local/include
 make
 make install
+cd ..
 
 echo "Installing Luarocks. End"
 
