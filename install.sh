@@ -67,11 +67,29 @@ if [[ `uname -a` == *"ARCH"* ]]; then
 fi
 
 echo "Installing Lua version: ${TORCH_LUA_VERSION}"
-mkdir -p install
-mkdir -p build
-cd build
-cmake .. -DCMAKE_INSTALL_PREFIX="${PREFIX}" -DCMAKE_BUILD_TYPE=Release -DWITH_${TORCH_LUA_VERSION}=ON 2>&1 >>$PREFIX/install.log || exit 1
-(make 2>&1 >>$PREFIX/install.log  || exit 1) && (make install 2>&1 >>$PREFIX/install.log || exit 1)
+apt-get install -y build-essential libreadline-dev unzip
+curl -R -O http://www.lua.org/ftp/lua-5.3.5.tar.gz
+tar -zxf lua-5.3.5.tar.gz
+cd lua-5.3.5
+make linux test
+make install
+
+echo "Installing Luarocks"
+wget https://luarocks.org/releases/luarocks-3.8.0.tar.gz
+tar zxpf luarocks-3.8.0.tar.gz
+cd luarocks-3.8.0
+./configure --with-lua-include=/usr/local/include
+make
+make install
+
+echo "Installing Luarocks. End"
+
+
+#mkdir -p install
+#mkdir -p build
+#cd build
+#cmake .. -DCMAKE_INSTALL_PREFIX="${PREFIX}" -DCMAKE_BUILD_TYPE=Release -DWITH_${TORCH_LUA_VERSION}=ON 2>&1 >>$PREFIX/install.log || exit 1
+#(make 2>&1 >>$PREFIX/install.log  || exit 1) && (make install 2>&1 >>$PREFIX/install.log || exit 1)
 cd ..
 
 # Check for a CUDA install (using nvcc instead of nvidia-smi for cross-platform compatibility)
@@ -118,18 +136,18 @@ cd ${THIS_DIR}/extra/penlight && luarocks make penlight-scm-1.rockspec || exit 1
 cd ${THIS_DIR}/extra/lua-cjson && luarocks make lua-cjson-2.1devel-1.rockspec || exit 1
 
 echo "Installing core Torch packages"
-cd ${THIS_DIR}/extra/luaffifb && $PREFIX/bin/luarocks make luaffi-scm-1.rockspec       || exit 1
-cd ${THIS_DIR}/pkg/sundown   && $PREFIX/bin/luarocks make rocks/sundown-scm-1.rockspec || exit 1
-cd ${THIS_DIR}/pkg/cwrap     && $PREFIX/bin/luarocks make rocks/cwrap-scm-1.rockspec   || exit 1
-cd ${THIS_DIR}/pkg/paths     && $PREFIX/bin/luarocks make rocks/paths-scm-1.rockspec   || exit 1
-cd ${THIS_DIR}/pkg/torch     && $PREFIX/bin/luarocks make rocks/torch-scm-1.rockspec   || exit 1
-cd ${THIS_DIR}/pkg/dok       && $PREFIX/bin/luarocks make rocks/dok-scm-1.rockspec     || exit 1
-cd ${THIS_DIR}/exe/trepl     && $PREFIX/bin/luarocks make trepl-scm-1.rockspec         || exit 1
-cd ${THIS_DIR}/pkg/sys       && $PREFIX/bin/luarocks make sys-1.1-0.rockspec           || exit 1
-cd ${THIS_DIR}/pkg/xlua      && $PREFIX/bin/luarocks make xlua-1.0-0.rockspec          || exit 1
-cd ${THIS_DIR}/extra/moses   && $PREFIX/bin/luarocks make rockspec/moses-1.6.1-1.rockspec || exit 1
-cd ${THIS_DIR}/extra/nn      && $PREFIX/bin/luarocks make rocks/nn-scm-1.rockspec      || exit 1
-cd ${THIS_DIR}/extra/graph   && $PREFIX/bin/luarocks make rocks/graph-scm-1.rockspec   || exit 1
+cd ${THIS_DIR}/extra/luaffifb && luarocks make luaffi-scm-1.rockspec       || exit 1
+cd ${THIS_DIR}/pkg/sundown   && luarocks make rocks/sundown-scm-1.rockspec || exit 1
+cd ${THIS_DIR}/pkg/cwrap     && luarocks make rocks/cwrap-scm-1.rockspec   || exit 1
+cd ${THIS_DIR}/pkg/paths     && luarocks make rocks/paths-scm-1.rockspec   || exit 1
+cd ${THIS_DIR}/pkg/torch     && luarocks make rocks/torch-scm-1.rockspec   || exit 1
+cd ${THIS_DIR}/pkg/dok       && luarocks make rocks/dok-scm-1.rockspec     || exit 1
+cd ${THIS_DIR}/exe/trepl     && luarocks make trepl-scm-1.rockspec         || exit 1
+cd ${THIS_DIR}/pkg/sys       && luarocks make sys-1.1-0.rockspec           || exit 1
+cd ${THIS_DIR}/pkg/xlua      && luarocks make xlua-1.0-0.rockspec          || exit 1
+cd ${THIS_DIR}/extra/moses   && luarocks make rockspec/moses-1.6.1-1.rockspec || exit 1
+cd ${THIS_DIR}/extra/nn      && luarocks make rocks/nn-scm-1.rockspec      || exit 1
+cd ${THIS_DIR}/extra/graph   && luarocks make rocks/graph-scm-1.rockspec   || exit 1
 cd ${THIS_DIR}/extra/nngraph && $PREFIX/bin/luarocks make nngraph-scm-1.rockspec       || exit 1
 cd ${THIS_DIR}/pkg/image     && $PREFIX/bin/luarocks make image-1.1.alpha-0.rockspec   || exit 1
 cd ${THIS_DIR}/pkg/optim     && $PREFIX/bin/luarocks make optim-1.0.5-0.rockspec       || exit 1
