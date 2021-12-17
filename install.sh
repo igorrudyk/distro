@@ -75,7 +75,7 @@ make linux test
 make install
 
 echo "Installing Luarocks"
-wget https://luarocks.org/releases/luarocks-3.8.0.tar.gz
+wget https://luarocks.org/releases/luarocks-3.8.0.tar.gz --no-check-certificate
 tar zxpf luarocks-3.8.0.tar.gz
 cd luarocks-3.8.0
 ./configure --with-lua-include=/usr/local/include
