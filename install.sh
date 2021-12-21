@@ -68,9 +68,9 @@ fi
 
 echo "Installing Lua version: ${TORCH_LUA_VERSION}"
 apt-get install -y build-essential libreadline-dev unzip
-curl -R -O http://www.lua.org/ftp/lua-5.3.5.tar.gz
-tar -zxf lua-5.3.5.tar.gz
-cd lua-5.3.5
+curl -R -O http://www.lua.org/ftp/lua-5.2.4.tar.gz
+tar -zxf lua-5.2.4.tar.gz
+cd lua-5.2.4
 make linux test
 make install
 cd ..
