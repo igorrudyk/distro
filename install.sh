@@ -69,7 +69,7 @@ fi
 
 
 echo "Installing Luarocks"
-apt-get install -y luarocks lua
+apt-get install -y luarocks lua5.1
 
 echo "Installing Luarocks. End"
 
