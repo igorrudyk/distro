@@ -66,23 +66,10 @@ if [[ `uname -a` == *"ARCH"* ]]; then
     fi
 fi
 
-echo "Installing Lua version: ${TORCH_LUA_VERSION}"
-apt-get install -y build-essential libreadline-dev unzip
-curl -R -O http://www.lua.org/ftp/lua-5.2.4.tar.gz
-tar -zxf lua-5.2.4.tar.gz
-cd lua-5.2.4
-make linux test
-make install
-cd ..
+
 
 echo "Installing Luarocks"
-wget https://luarocks.org/releases/luarocks-3.8.0.tar.gz --no-check-certificate
-tar zxpf luarocks-3.8.0.tar.gz
-cd luarocks-3.8.0
-./configure --with-lua-include=/usr/local/include
-make
-make install
-cd ..
+apt-get install -y luarocks lua
 
 echo "Installing Luarocks. End"
 
@@ -124,8 +111,6 @@ then
         && make install) && echo "FindCuda bits of CMake 3.6 installed" || exit 1
 fi
 
-setup_lua_env_cmd=$($PREFIX/bin/luarocks path)
-eval "$setup_lua_env_cmd"
 
 #apt-get install luarocks -y
 
@@ -133,9 +118,9 @@ luarocks list
 $PREFIX/bin/luarocks list
 
 echo "Installing common Lua packages"
-cd ${THIS_DIR}/extra/luafilesystem && $PREFIX/bin/luarocks make rockspecs/luafilesystem-1.6.3-1.rockspec || exit 1
-cd ${THIS_DIR}/extra/penlight && $PREFIX/bin/luarocks make penlight-scm-1.rockspec || exit 1
-cd ${THIS_DIR}/extra/lua-cjson && $PREFIX/bin/luarocks make lua-cjson-2.1devel-1.rockspec || exit 1
+cd ${THIS_DIR}/extra/luafilesystem && luarocks make rockspecs/luafilesystem-1.6.3-1.rockspec || exit 1
+cd ${THIS_DIR}/extra/penlight && luarocks make penlight-scm-1.rockspec || exit 1
+cd ${THIS_DIR}/extra/lua-cjson && luarocks make lua-cjson-2.1devel-1.rockspec || exit 1
 
 echo "Installing core Torch packages"
 cd ${THIS_DIR}/extra/luaffifb && luarocks make luaffi-scm-1.rockspec       || exit 1
@@ -150,9 +135,9 @@ cd ${THIS_DIR}/pkg/xlua      && luarocks make xlua-1.0-0.rockspec          || ex
 cd ${THIS_DIR}/extra/moses   && luarocks make rockspec/moses-1.6.1-1.rockspec || exit 1
 cd ${THIS_DIR}/extra/nn      && luarocks make rocks/nn-scm-1.rockspec      || exit 1
 cd ${THIS_DIR}/extra/graph   && luarocks make rocks/graph-scm-1.rockspec   || exit 1
-cd ${THIS_DIR}/extra/nngraph && $PREFIX/bin/luarocks make nngraph-scm-1.rockspec       || exit 1
-cd ${THIS_DIR}/pkg/image     && $PREFIX/bin/luarocks make image-1.1.alpha-0.rockspec   || exit 1
-cd ${THIS_DIR}/pkg/optim     && $PREFIX/bin/luarocks make optim-1.0.5-0.rockspec       || exit 1
+cd ${THIS_DIR}/extra/nngraph && luarocks make nngraph-scm-1.rockspec       || exit 1
+cd ${THIS_DIR}/pkg/image     && luarocks make image-1.1.alpha-0.rockspec   || exit 1
+cd ${THIS_DIR}/pkg/optim     && luarocks make optim-1.0.5-0.rockspec       || exit 1
 
 if [ -x "$path_to_nvcc" ]
 then
@@ -163,13 +148,13 @@ fi
 
 # Optional packages
 echo "Installing optional Torch packages"
-cd ${THIS_DIR}/pkg/gnuplot          && $PREFIX/bin/luarocks make rocks/gnuplot-scm-1.rockspec
-cd ${THIS_DIR}/exe/env              && $PREFIX/bin/luarocks make env-scm-1.rockspec
-cd ${THIS_DIR}/extra/nnx            && $PREFIX/bin/luarocks make nnx-0.1-1.rockspec
-cd ${THIS_DIR}/exe/qtlua            && $PREFIX/bin/luarocks make rocks/qtlua-scm-1.rockspec
-cd ${THIS_DIR}/pkg/qttorch          && $PREFIX/bin/luarocks make rocks/qttorch-scm-1.rockspec
-cd ${THIS_DIR}/extra/threads        && $PREFIX/bin/luarocks make rocks/threads-scm-1.rockspec
-cd ${THIS_DIR}/extra/argcheck       && $PREFIX/bin/luarocks make rocks/argcheck-scm-1.rockspec
+cd ${THIS_DIR}/pkg/gnuplot          && luarocks make rocks/gnuplot-scm-1.rockspec
+cd ${THIS_DIR}/exe/env              && luarocks make env-scm-1.rockspec
+cd ${THIS_DIR}/extra/nnx            && luarocks make nnx-0.1-1.rockspec
+cd ${THIS_DIR}/exe/qtlua            && luarocks make rocks/qtlua-scm-1.rockspec
+cd ${THIS_DIR}/pkg/qttorch          && luarocks make rocks/qttorch-scm-1.rockspec
+cd ${THIS_DIR}/extra/threads        && luarocks make rocks/threads-scm-1.rockspec
+cd ${THIS_DIR}/extra/argcheck       && luarocks make rocks/argcheck-scm-1.rockspec
 
 # Optional CUDA packages
 if [ -x "$path_to_nvcc" ]
